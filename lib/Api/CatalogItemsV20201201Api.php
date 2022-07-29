@@ -29,12 +29,14 @@ namespace SellingPartnerApi\Api;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
 use SellingPartnerApi\ApiException;
 use SellingPartnerApi\Configuration;
 use SellingPartnerApi\HeaderSelector;
+use SellingPartnerApi\Middlewares\TelescopeMiddleware;
 use SellingPartnerApi\ObjectSerializer;
 
 /**
@@ -72,12 +74,17 @@ class CatalogItemsV20201201Api
      * @param int             $hostIndex (Optional) host index to select the list of hosts if defined in the OpenAPI spec
      */
     public function __construct(
-        Configuration $config,
+        Configuration   $config,
         ClientInterface $client = null,
-        HeaderSelector $selector = null,
-        $hostIndex = 0
-    ) {
-        $this->client = $client ?: new Client();
+        HeaderSelector  $selector = null,
+                        $hostIndex = 0
+    )
+    {
+        $stack = HandlerStack::create();
+        $stack->push(new TelescopeMiddleware());
+        $this->client = $client ?: new Client([
+            "handler" => $stack
+        ]);
         $this->config = $config;
         $this->headerSelector = $selector ?: new HeaderSelector($this->config);
         $this->hostIndex = $hostIndex;
