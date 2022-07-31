@@ -5,6 +5,7 @@ namespace SellingPartnerApi;
 use Aws\Sts\StsClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
+use SellingPartnerApi\Api\ClientImpl;
 use SellingPartnerApi\Api\TokensV20210301Api as TokensApi;
 use SellingPartnerApi\Model\TokensV20210301 as Tokens;
 use RuntimeException;
@@ -16,7 +17,7 @@ class Authentication implements RequestSignerContract
     private $lwaClientId;
     private $lwaClientSecret;
     private $lwaRefreshToken = null;
-    private $lwaAuthUrl      = null;
+    private $lwaAuthUrl = null;
     private $endpoint;
 
     private $onUpdateCreds;
@@ -39,7 +40,7 @@ class Authentication implements RequestSignerContract
      * @var string
      */
     private $awsSecretAccessKey;
-    
+
     /** @var \SellingPartnerApi\Api\TokensV20210301Api */
     private $tokensApi = null;
 
@@ -53,7 +54,7 @@ class Authentication implements RequestSignerContract
      */
     public function __construct(array $configurationOptions)
     {
-        $this->client = $configurationOptions['authenticationClient'] ?? new Client();
+        $this->client = $configurationOptions['authenticationClient'] ?? ClientImpl::getClientWitHandlerStack(null);
 
         $this->lwaAuthUrl = $configurationOptions['lwaAuthUrl'] ?? "https://api.amazon.com/auth/o2/token";
         $this->lwaRefreshToken = $configurationOptions['lwaRefreshToken'] ?? null;
@@ -73,7 +74,7 @@ class Authentication implements RequestSignerContract
         if ($accessToken !== null && $accessTokenExpiration !== null) {
             $this->populateCredentials($this->awsAccessKeyId, $this->awsSecretAccessKey, $accessToken, $accessTokenExpiration);
         }
-        
+
         $this->tokensApi = $configurationOptions['tokensApi'] ?? null;
 
         $this->authorizationSigner = $configurationOptions['authorizationSigner'] ?? new AuthorizationSigner($this->endpoint);
@@ -106,7 +107,7 @@ class Authentication implements RequestSignerContract
             }
             $jsonData["refresh_token"] = $this->lwaRefreshToken;
         }
-        
+
         $lwaTokenRequestHeaders = [
             'Content-Type' => 'application/json',
         ];
@@ -328,7 +329,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Get LWA client ID.
-     * 
+     *
      * @return string
      */
     public function getLwaClientId(): ?string
@@ -338,7 +339,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Set LWA client ID.
-     * 
+     *
      * @param string $lwaClientId
      * @return void
      */
@@ -349,7 +350,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Get LWA client secret.
-     * 
+     *
      * @return string
      */
     public function getLwaClientSecret(): ?string
@@ -359,7 +360,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Set LWA client secret.
-     * 
+     *
      * @param string $lwaClientSecret
      * @return void
      */
@@ -370,7 +371,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Get LWA refresh token.
-     * 
+     *
      * @return string|null
      */
     public function getLwaRefreshToken(): ?string
@@ -380,7 +381,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Set LWA refresh token.
-     * 
+     *
      * @param string|null $lwaRefreshToken
      * @return void
      */
@@ -391,7 +392,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Get AWS access key ID.
-     * 
+     *
      * @return string
      */
     public function getAwsAccessKeyId(): ?string
@@ -401,7 +402,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Set AWS access key ID.
-     * 
+     *
      * @param string $awsAccessKeyId
      * @return void
      */
@@ -412,7 +413,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Get AWS secret access key.
-     * 
+     *
      * @return string|null
      */
     public function getAwsSecretAccessKey(): ?string
@@ -422,7 +423,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Set AWS secret access key.
-     * 
+     *
      * @param string $awsSecretAccessKey
      * @return void
      */
@@ -443,7 +444,7 @@ class Authentication implements RequestSignerContract
 
     /**
      * Set SP API endpoint. $endpoint should be one of the constants from Endpoint.php.
-     * 
+     *
      * @param array $endpoint
      * @return void
      * @throws RuntimeException

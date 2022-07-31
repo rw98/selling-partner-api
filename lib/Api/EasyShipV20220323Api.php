@@ -68,10 +68,10 @@ class EasyShipV20220323Api
     protected $hostIndex;
 
     /**
-     * @param Configuration   $config
+     * @param Configuration $config
      * @param ClientInterface $client
-     * @param HeaderSelector  $selector
-     * @param int             $hostIndex (Optional) host index to select the list of hosts if defined in the OpenAPI spec
+     * @param HeaderSelector $selector
+     * @param int $hostIndex (Optional) host index to select the list of hosts if defined in the OpenAPI spec
      */
     public function __construct(
         Configuration   $config,
@@ -80,14 +80,7 @@ class EasyShipV20220323Api
                         $hostIndex = 0
     )
     {
-        $stack = HandlerStack::create();
-        $stack->push(new TelescopeMiddleware());
-        $this->client = $client ?: new Client([
-            "handler" => $stack
-        ]);
-        $this->config = $config;
-        $this->headerSelector = $selector ?: new HeaderSelector($this->config);
-        $this->hostIndex = $hostIndex;
+        list ($this->client, $this->config, $this->headerSelector, $this->hostIndex) = ClientImpl::getClient($client, $config, $selector, $hostIndex);
     }
 
     /**
@@ -121,11 +114,11 @@ class EasyShipV20220323Api
     /**
      * Operation createScheduledPackage
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request create_scheduled_package_request (required)
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request create_scheduled_package_request (required)
      *
-     * @throws \SellingPartnerApi\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \SellingPartnerApi\Model\EasyShipV20220323\Package
+     * @throws \InvalidArgumentException
+     * @throws \SellingPartnerApi\ApiException on non-2xx response
      */
     public function createScheduledPackage($create_scheduled_package_request)
     {
@@ -136,11 +129,11 @@ class EasyShipV20220323Api
     /**
      * Operation createScheduledPackageWithHttpInfo
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request (required)
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request (required)
      *
-     * @throws \SellingPartnerApi\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \SellingPartnerApi\Model\EasyShipV20220323\Package, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \SellingPartnerApi\ApiException on non-2xx response
      */
     public function createScheduledPackageWithHttpInfo($create_scheduled_package_request)
     {
@@ -149,20 +142,17 @@ class EasyShipV20220323Api
             $request
         );
 
-        $this->writeDebug($signedRequest);
-        $this->writeDebug((string) $signedRequest->getBody());
+
 
         try {
             $options = $this->createHttpClientOption();
             try {
                 $response = $this->client->send($signedRequest, $options);
-                $this->writeDebug($response);
-                $this->writeDebug((string) $response->getBody());
+
             } catch (RequestException $e) {
                 $hasResponse = !empty($e->hasResponse());
-                $body = (string) ($hasResponse ? $e->getResponse()->getBody() : '[NULL response]');
-                $this->writeDebug($e->getResponse());
-                $this->writeDebug($body);
+                $body = (string)($hasResponse ? $e->getResponse()->getBody() : '[NULL response]');
+
                 throw new ApiException(
                     "[{$e->getCode()}] {$body}",
                     $e->getCode(),
@@ -187,12 +177,12 @@ class EasyShipV20220323Api
             }
 
             $responseBody = $response->getBody();
-            switch($statusCode) {
+            switch ($statusCode) {
                 case 200:
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\Package' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\Package', $response->getHeaders());
@@ -200,7 +190,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -208,7 +198,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -216,7 +206,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -224,7 +214,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -232,7 +222,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -240,7 +230,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -248,7 +238,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -256,7 +246,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -267,7 +257,7 @@ class EasyShipV20220323Api
             if ($returnType === '\SplFileObject') {
                 $content = $responseBody; //stream goes to serializer
             } else {
-                $content = (string) $responseBody;
+                $content = (string)$responseBody;
             }
 
             return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
@@ -347,7 +337,7 @@ class EasyShipV20220323Api
                     $e->setResponseObject($data);
                     break;
             }
-            $this->writeDebug($e);
+
             throw $e;
         }
     }
@@ -355,12 +345,12 @@ class EasyShipV20220323Api
     /**
      * Operation createScheduledPackageAsync
      *
-     * 
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request (required)
      *
-     * @throws \InvalidArgumentException
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request (required)
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
      */
     public function createScheduledPackageAsync($create_scheduled_package_request)
     {
@@ -370,12 +360,12 @@ class EasyShipV20220323Api
     /**
      * Operation createScheduledPackageAsyncWithHttpInfo
      *
-     * 
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request (required)
      *
-     * @throws \InvalidArgumentException
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request (required)
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
      */
     public function createScheduledPackageAsyncWithHttpInfo($create_scheduled_package_request)
     {
@@ -385,8 +375,7 @@ class EasyShipV20220323Api
             $request
         );
 
-        $this->writeDebug($signedRequest);
-        $this->writeDebug((string) $signedRequest->getBody());
+
 
         return $this->client
             ->sendAsync($signedRequest, $this->createHttpClientOption())
@@ -397,7 +386,7 @@ class EasyShipV20220323Api
                     if ($returnType === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
@@ -405,7 +394,7 @@ class EasyShipV20220323Api
                 function ($exception) {
                     $response = $exception->getResponse();
                     $hasResponse = !empty($response);
-                    $body = (string) ($hasResponse ? $response->getBody() : '[NULL response]');
+                    $body = (string)($hasResponse ? $response->getBody() : '[NULL response]');
                     $this->writeDebug($response);
                     $statusCode = $hasResponse ? $response->getStatusCode() : $exception->getCode();
                     throw new ApiException(
@@ -425,10 +414,10 @@ class EasyShipV20220323Api
     /**
      * Create request for operation 'createScheduledPackage'
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request (required)
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\CreateScheduledPackageRequest $create_scheduled_package_request (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     public function createScheduledPackageRequest($create_scheduled_package_request)
     {
@@ -511,12 +500,12 @@ class EasyShipV20220323Api
     /**
      * Operation getScheduledPackage
      *
-     * @param  string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
-     * @param  string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
+     * @param string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
+     * @param string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
      *
-     * @throws \SellingPartnerApi\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \SellingPartnerApi\Model\EasyShipV20220323\Package
+     * @throws \InvalidArgumentException
+     * @throws \SellingPartnerApi\ApiException on non-2xx response
      */
     public function getScheduledPackage($amazon_order_id, $marketplace_id)
     {
@@ -527,12 +516,12 @@ class EasyShipV20220323Api
     /**
      * Operation getScheduledPackageWithHttpInfo
      *
-     * @param  string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
-     * @param  string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
+     * @param string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
+     * @param string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
      *
-     * @throws \SellingPartnerApi\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \SellingPartnerApi\Model\EasyShipV20220323\Package, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \SellingPartnerApi\ApiException on non-2xx response
      */
     public function getScheduledPackageWithHttpInfo($amazon_order_id, $marketplace_id)
     {
@@ -541,20 +530,17 @@ class EasyShipV20220323Api
             $request
         );
 
-        $this->writeDebug($signedRequest);
-        $this->writeDebug((string) $signedRequest->getBody());
+
 
         try {
             $options = $this->createHttpClientOption();
             try {
                 $response = $this->client->send($signedRequest, $options);
-                $this->writeDebug($response);
-                $this->writeDebug((string) $response->getBody());
+
             } catch (RequestException $e) {
                 $hasResponse = !empty($e->hasResponse());
-                $body = (string) ($hasResponse ? $e->getResponse()->getBody() : '[NULL response]');
-                $this->writeDebug($e->getResponse());
-                $this->writeDebug($body);
+                $body = (string)($hasResponse ? $e->getResponse()->getBody() : '[NULL response]');
+
                 throw new ApiException(
                     "[{$e->getCode()}] {$body}",
                     $e->getCode(),
@@ -579,12 +565,12 @@ class EasyShipV20220323Api
             }
 
             $responseBody = $response->getBody();
-            switch($statusCode) {
+            switch ($statusCode) {
                 case 200:
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\Package' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\Package', $response->getHeaders());
@@ -592,7 +578,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -600,7 +586,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -608,7 +594,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -616,7 +602,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -624,7 +610,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -632,7 +618,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -640,7 +626,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -648,7 +634,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -659,7 +645,7 @@ class EasyShipV20220323Api
             if ($returnType === '\SplFileObject') {
                 $content = $responseBody; //stream goes to serializer
             } else {
-                $content = (string) $responseBody;
+                $content = (string)$responseBody;
             }
 
             return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
@@ -739,7 +725,7 @@ class EasyShipV20220323Api
                     $e->setResponseObject($data);
                     break;
             }
-            $this->writeDebug($e);
+
             throw $e;
         }
     }
@@ -747,13 +733,13 @@ class EasyShipV20220323Api
     /**
      * Operation getScheduledPackageAsync
      *
-     * 
      *
-     * @param  string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
-     * @param  string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
      *
-     * @throws \InvalidArgumentException
+     * @param string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
+     * @param string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
      */
     public function getScheduledPackageAsync($amazon_order_id, $marketplace_id)
     {
@@ -763,13 +749,13 @@ class EasyShipV20220323Api
     /**
      * Operation getScheduledPackageAsyncWithHttpInfo
      *
-     * 
      *
-     * @param  string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
-     * @param  string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
      *
-     * @throws \InvalidArgumentException
+     * @param string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
+     * @param string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
      */
     public function getScheduledPackageAsyncWithHttpInfo($amazon_order_id, $marketplace_id)
     {
@@ -779,8 +765,7 @@ class EasyShipV20220323Api
             $request
         );
 
-        $this->writeDebug($signedRequest);
-        $this->writeDebug((string) $signedRequest->getBody());
+
 
         return $this->client
             ->sendAsync($signedRequest, $this->createHttpClientOption())
@@ -791,7 +776,7 @@ class EasyShipV20220323Api
                     if ($returnType === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
@@ -799,7 +784,7 @@ class EasyShipV20220323Api
                 function ($exception) {
                     $response = $exception->getResponse();
                     $hasResponse = !empty($response);
-                    $body = (string) ($hasResponse ? $response->getBody() : '[NULL response]');
+                    $body = (string)($hasResponse ? $response->getBody() : '[NULL response]');
                     $this->writeDebug($response);
                     $statusCode = $hasResponse ? $response->getStatusCode() : $exception->getCode();
                     throw new ApiException(
@@ -819,11 +804,11 @@ class EasyShipV20220323Api
     /**
      * Create request for operation 'getScheduledPackage'
      *
-     * @param  string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
-     * @param  string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
+     * @param string $amazon_order_id An Amazon-defined order identifier. Identifies the order that the seller wants to deliver using Amazon Easy Ship. (required)
+     * @param string $marketplace_id An identifier for the marketplace in which the seller is selling. (required)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     public function getScheduledPackageRequest($amazon_order_id, $marketplace_id)
     {
@@ -936,11 +921,11 @@ class EasyShipV20220323Api
     /**
      * Operation listHandoverSlots
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request list_handover_slots_request (optional)
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request list_handover_slots_request (optional)
      *
-     * @throws \SellingPartnerApi\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsResponse
+     * @throws \InvalidArgumentException
+     * @throws \SellingPartnerApi\ApiException on non-2xx response
      */
     public function listHandoverSlots($list_handover_slots_request = null)
     {
@@ -951,11 +936,11 @@ class EasyShipV20220323Api
     /**
      * Operation listHandoverSlotsWithHttpInfo
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request (optional)
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request (optional)
      *
-     * @throws \SellingPartnerApi\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsResponse, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \SellingPartnerApi\ApiException on non-2xx response
      */
     public function listHandoverSlotsWithHttpInfo($list_handover_slots_request = null)
     {
@@ -964,20 +949,17 @@ class EasyShipV20220323Api
             $request
         );
 
-        $this->writeDebug($signedRequest);
-        $this->writeDebug((string) $signedRequest->getBody());
+
 
         try {
             $options = $this->createHttpClientOption();
             try {
                 $response = $this->client->send($signedRequest, $options);
-                $this->writeDebug($response);
-                $this->writeDebug((string) $response->getBody());
+
             } catch (RequestException $e) {
                 $hasResponse = !empty($e->hasResponse());
-                $body = (string) ($hasResponse ? $e->getResponse()->getBody() : '[NULL response]');
-                $this->writeDebug($e->getResponse());
-                $this->writeDebug($body);
+                $body = (string)($hasResponse ? $e->getResponse()->getBody() : '[NULL response]');
+
                 throw new ApiException(
                     "[{$e->getCode()}] {$body}",
                     $e->getCode(),
@@ -1002,12 +984,12 @@ class EasyShipV20220323Api
             }
 
             $responseBody = $response->getBody();
-            switch($statusCode) {
+            switch ($statusCode) {
                 case 200:
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsResponse' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsResponse', $response->getHeaders());
@@ -1015,7 +997,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1023,7 +1005,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1031,7 +1013,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1039,7 +1021,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1047,7 +1029,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1055,7 +1037,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1063,7 +1045,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1071,7 +1053,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1082,7 +1064,7 @@ class EasyShipV20220323Api
             if ($returnType === '\SplFileObject') {
                 $content = $responseBody; //stream goes to serializer
             } else {
-                $content = (string) $responseBody;
+                $content = (string)$responseBody;
             }
 
             return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
@@ -1162,7 +1144,7 @@ class EasyShipV20220323Api
                     $e->setResponseObject($data);
                     break;
             }
-            $this->writeDebug($e);
+
             throw $e;
         }
     }
@@ -1170,12 +1152,12 @@ class EasyShipV20220323Api
     /**
      * Operation listHandoverSlotsAsync
      *
-     * 
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request (optional)
      *
-     * @throws \InvalidArgumentException
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request (optional)
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
      */
     public function listHandoverSlotsAsync($list_handover_slots_request = null)
     {
@@ -1185,12 +1167,12 @@ class EasyShipV20220323Api
     /**
      * Operation listHandoverSlotsAsyncWithHttpInfo
      *
-     * 
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request (optional)
      *
-     * @throws \InvalidArgumentException
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request (optional)
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
      */
     public function listHandoverSlotsAsyncWithHttpInfo($list_handover_slots_request = null)
     {
@@ -1200,8 +1182,7 @@ class EasyShipV20220323Api
             $request
         );
 
-        $this->writeDebug($signedRequest);
-        $this->writeDebug((string) $signedRequest->getBody());
+
 
         return $this->client
             ->sendAsync($signedRequest, $this->createHttpClientOption())
@@ -1212,7 +1193,7 @@ class EasyShipV20220323Api
                     if ($returnType === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
@@ -1220,7 +1201,7 @@ class EasyShipV20220323Api
                 function ($exception) {
                     $response = $exception->getResponse();
                     $hasResponse = !empty($response);
-                    $body = (string) ($hasResponse ? $response->getBody() : '[NULL response]');
+                    $body = (string)($hasResponse ? $response->getBody() : '[NULL response]');
                     $this->writeDebug($response);
                     $statusCode = $hasResponse ? $response->getStatusCode() : $exception->getCode();
                     throw new ApiException(
@@ -1240,10 +1221,10 @@ class EasyShipV20220323Api
     /**
      * Create request for operation 'listHandoverSlots'
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request (optional)
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\ListHandoverSlotsRequest $list_handover_slots_request (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     public function listHandoverSlotsRequest($list_handover_slots_request = null)
     {
@@ -1320,11 +1301,11 @@ class EasyShipV20220323Api
     /**
      * Operation updateScheduledPackages
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request update_scheduled_packages_request (optional)
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request update_scheduled_packages_request (optional)
      *
-     * @throws \SellingPartnerApi\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return \SellingPartnerApi\Model\EasyShipV20220323\Packages
+     * @throws \InvalidArgumentException
+     * @throws \SellingPartnerApi\ApiException on non-2xx response
      */
     public function updateScheduledPackages($update_scheduled_packages_request = null)
     {
@@ -1335,11 +1316,11 @@ class EasyShipV20220323Api
     /**
      * Operation updateScheduledPackagesWithHttpInfo
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request (optional)
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request (optional)
      *
-     * @throws \SellingPartnerApi\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
      * @return array of \SellingPartnerApi\Model\EasyShipV20220323\Packages, HTTP status code, HTTP response headers (array of strings)
+     * @throws \InvalidArgumentException
+     * @throws \SellingPartnerApi\ApiException on non-2xx response
      */
     public function updateScheduledPackagesWithHttpInfo($update_scheduled_packages_request = null)
     {
@@ -1348,20 +1329,17 @@ class EasyShipV20220323Api
             $request
         );
 
-        $this->writeDebug($signedRequest);
-        $this->writeDebug((string) $signedRequest->getBody());
+
 
         try {
             $options = $this->createHttpClientOption();
             try {
                 $response = $this->client->send($signedRequest, $options);
-                $this->writeDebug($response);
-                $this->writeDebug((string) $response->getBody());
+
             } catch (RequestException $e) {
                 $hasResponse = !empty($e->hasResponse());
-                $body = (string) ($hasResponse ? $e->getResponse()->getBody() : '[NULL response]');
-                $this->writeDebug($e->getResponse());
-                $this->writeDebug($body);
+                $body = (string)($hasResponse ? $e->getResponse()->getBody() : '[NULL response]');
+
                 throw new ApiException(
                     "[{$e->getCode()}] {$body}",
                     $e->getCode(),
@@ -1386,12 +1364,12 @@ class EasyShipV20220323Api
             }
 
             $responseBody = $response->getBody();
-            switch($statusCode) {
+            switch ($statusCode) {
                 case 200:
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\Packages' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\Packages', $response->getHeaders());
@@ -1399,7 +1377,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1407,7 +1385,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1415,7 +1393,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1423,7 +1401,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1431,7 +1409,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1439,7 +1417,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1447,7 +1425,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1455,7 +1433,7 @@ class EasyShipV20220323Api
                     if ('\SellingPartnerApi\Model\EasyShipV20220323\ErrorList' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, '\SellingPartnerApi\Model\EasyShipV20220323\ErrorList', $response->getHeaders());
@@ -1466,7 +1444,7 @@ class EasyShipV20220323Api
             if ($returnType === '\SplFileObject') {
                 $content = $responseBody; //stream goes to serializer
             } else {
-                $content = (string) $responseBody;
+                $content = (string)$responseBody;
             }
 
             return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
@@ -1546,7 +1524,7 @@ class EasyShipV20220323Api
                     $e->setResponseObject($data);
                     break;
             }
-            $this->writeDebug($e);
+
             throw $e;
         }
     }
@@ -1554,12 +1532,12 @@ class EasyShipV20220323Api
     /**
      * Operation updateScheduledPackagesAsync
      *
-     * 
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request (optional)
      *
-     * @throws \InvalidArgumentException
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request (optional)
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
      */
     public function updateScheduledPackagesAsync($update_scheduled_packages_request = null)
     {
@@ -1569,12 +1547,12 @@ class EasyShipV20220323Api
     /**
      * Operation updateScheduledPackagesAsyncWithHttpInfo
      *
-     * 
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request (optional)
      *
-     * @throws \InvalidArgumentException
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request (optional)
+     *
      * @return \GuzzleHttp\Promise\PromiseInterface
+     * @throws \InvalidArgumentException
      */
     public function updateScheduledPackagesAsyncWithHttpInfo($update_scheduled_packages_request = null)
     {
@@ -1584,8 +1562,7 @@ class EasyShipV20220323Api
             $request
         );
 
-        $this->writeDebug($signedRequest);
-        $this->writeDebug((string) $signedRequest->getBody());
+
 
         return $this->client
             ->sendAsync($signedRequest, $this->createHttpClientOption())
@@ -1596,7 +1573,7 @@ class EasyShipV20220323Api
                     if ($returnType === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
-                        $content = (string) $responseBody;
+                        $content = (string)$responseBody;
                     }
 
                     return ObjectSerializer::deserialize($content, $returnType, $response->getHeaders());
@@ -1604,7 +1581,7 @@ class EasyShipV20220323Api
                 function ($exception) {
                     $response = $exception->getResponse();
                     $hasResponse = !empty($response);
-                    $body = (string) ($hasResponse ? $response->getBody() : '[NULL response]');
+                    $body = (string)($hasResponse ? $response->getBody() : '[NULL response]');
                     $this->writeDebug($response);
                     $statusCode = $hasResponse ? $response->getStatusCode() : $exception->getCode();
                     throw new ApiException(
@@ -1624,10 +1601,10 @@ class EasyShipV20220323Api
     /**
      * Create request for operation 'updateScheduledPackages'
      *
-     * @param  \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request (optional)
+     * @param \SellingPartnerApi\Model\EasyShipV20220323\UpdateScheduledPackagesRequest $update_scheduled_packages_request (optional)
      *
-     * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
+     * @throws \InvalidArgumentException
      */
     public function updateScheduledPackagesRequest($update_scheduled_packages_request = null)
     {
@@ -1704,8 +1681,8 @@ class EasyShipV20220323Api
     /**
      * Create http client option
      *
-     * @throws \RuntimeException on file opening failure
      * @return array of http client options
+     * @throws \RuntimeException on file opening failure
      */
     protected function createHttpClientOption()
     {
@@ -1720,16 +1697,4 @@ class EasyShipV20220323Api
         return $options;
     }
 
-    /**
-     * Writes to the debug log file
-     *
-     * @param any $data
-     * @return void
-     */
-    private function writeDebug($data)
-    {
-        if ($this->config->getDebug()) {
-            file_put_contents($this->config->getDebugFile(), '[' . date('Y-m-d H:i:s') . ']: ' . print_r($data, true) . "\n", FILE_APPEND);
-        }
-    }
 }

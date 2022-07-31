@@ -3,17 +3,16 @@
 namespace SellingPartnerApi\Middlewares;
 
 
-use Closure;
-use GuzzleHttp\Promise;
-use Illuminate\Http\Client\Events\ConnectionFailed;
 use Illuminate\Http\Client\Events\RequestSending;
 use Illuminate\Http\Client\Events\ResponseReceived;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\Client\Response;
+use Illuminate\Http\Client\Events\ConnectionFailed;
+use GuzzleHttp\Promise;
 
-class TelescopeMiddleware
-{
-    public function __invoke(callable $handler): Closure
+class TelescopeMiddleware {
+
+    public function __invoke(callable $handler)
     {
         return function ($request, array $options) use ($handler) {
 
@@ -47,5 +46,6 @@ class TelescopeMiddleware
             return Promise\Create::rejectionFor($reason);
         };
     }
+
 
 }
