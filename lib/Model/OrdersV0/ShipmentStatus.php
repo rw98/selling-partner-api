@@ -33,7 +33,7 @@ use \SellingPartnerApi\Model\ModelInterface;
  * ShipmentStatus Class Doc Comment
  *
  * @category Class
- * @description the status of the shipment of the order to be updated
+ * @description The shipment status to apply.
  * @package  SellingPartnerApi
  * @group 
  */
